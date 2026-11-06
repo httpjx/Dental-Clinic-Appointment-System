@@ -1,0 +1,483 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: 'Inter', Arial, sans-serif;
+  color: #263568;
+  background: #eaf3ff;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background: #eaf3ff;
+}
+
+button,
+select,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+.app-shell {
+  min-height: 100vh;
+  background: #eaf3ff;
+}
+
+.site-header {
+  height: 70px;
+  background: #315a9d;
+  color: #fff;
+}
+
+.header-content {
+  width: min(100% - 64px, 980px);
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-radius: 9px;
+  background: #4471b5;
+  box-shadow: inset 0 0 0 1px rgba(8, 27, 92, 0.1);
+}
+
+.tooth-icon {
+  width: 25px;
+  height: 25px;
+  color: #fff;
+  filter: drop-shadow(0 1px 1px rgba(8, 27, 92, 0.25));
+}
+
+.page-content {
+  position: relative;
+  width: min(100% - 64px, 880px);
+  min-height: calc(100vh - 70px);
+  margin: 0 auto;
+  padding: 40px 0 72px;
+}
+
+.intro h1 {
+  margin: 0;
+  color: #263568;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+
+.intro p {
+  margin: 8px 0 0;
+  color: #52618e;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.appointment-card {
+  width: 302px;
+  margin: 3px auto 0;
+  padding: 29px 34px 23px;
+  border: 1px solid #a8cdeb;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(42, 83, 140, 0.07);
+}
+
+.appointment-card h2 {
+  margin: 0 0 20px;
+  color: #263568;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.appointment-card form {
+  display: flex;
+  flex-direction: column;
+}
+
+.appointment-card label {
+  margin: 0 0 6px;
+  color: #15265c;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.appointment-card input,
+.appointment-card select {
+  width: 100%;
+  height: 29px;
+  border: 1px solid #a8cdeb;
+  border-radius: 6px;
+  outline: none;
+  background: #f0f8ff;
+  color: #43537f;
+  font-size: 10px;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.appointment-card input {
+  margin: 0 0 19px;
+  padding: 0 12px;
+  color-scheme: light;
+}
+
+.appointment-card select {
+  appearance: none;
+  padding: 0 30px 0 12px;
+}
+
+.appointment-card input:focus,
+.appointment-card select:focus {
+  border-color: #315a9d;
+  box-shadow: 0 0 0 3px rgba(49, 90, 157, 0.12);
+}
+
+.select-wrap {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.select-wrap::after {
+  content: '';
+  position: absolute;
+  top: 9px;
+  right: 11px;
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid #7195c4;
+  border-bottom: 2px solid #7195c4;
+  pointer-events: none;
+  transform: rotate(45deg);
+}
+
+.validation-message {
+  margin: -4px 0 10px;
+  color: #b42318;
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.confirm-button,
+.ok-button {
+  border: 0;
+  background: #081b5c;
+  color: #fff;
+  font-weight: 700;
+  transition:
+    background 150ms ease,
+    transform 100ms ease;
+}
+
+.confirm-button {
+  width: 100%;
+  height: 27px;
+  margin-top: 19px;
+  font-size: 12px;
+}
+
+.confirm-button:hover,
+.ok-button:hover {
+  background: #142d78;
+}
+
+.confirm-button:active,
+.ok-button:active {
+  transform: translateY(1px);
+}
+
+.confirm-button:focus-visible,
+.ok-button:focus-visible,
+.modal-close:focus-visible {
+  outline: 3px solid rgba(49, 90, 157, 0.3);
+  outline-offset: 2px;
+}
+
+.modal-overlay {
+  position: fixed;
+  z-index: 10;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(56, 75, 103, 0.22);
+}
+
+.confirmation-modal {
+  position: relative;
+  width: min(320px, 100%);
+  min-height: 300px;
+  padding: 23px 25px 18px;
+  border: 1px solid #59616b;
+  border-radius: 3px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(12, 31, 72, 0.2);
+  text-align: center;
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 9px;
+  width: 21px;
+  height: 21px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #edf3fa;
+  color: #6980a1;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.modal-close span {
+  transform: translateY(-1px);
+}
+
+.success-icon {
+  width: 59px;
+  height: 59px;
+  margin: 0 auto 12px;
+  color: #081b5c;
+}
+
+.confirmation-modal h2 {
+  margin: 0 0 14px;
+  color: #081b5c;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.slip-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 9px 10px 8px;
+  border-radius: 6px;
+  background: #eaf5ff;
+  box-shadow: inset 0 0 0 1px rgba(168, 205, 235, 0.35);
+}
+
+.slip-box span {
+  color: #344268;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.slip-box strong {
+  color: #081b5c;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+}
+
+.modal-message {
+  margin: 13px auto 15px;
+  color: #3e4c72;
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.ok-button {
+  width: 172px;
+  height: 28px;
+  font-size: 10px;
+}
+
+@media (max-width: 640px) {
+  .site-header {
+    height: 66px;
+  }
+
+  .header-content {
+    width: calc(100% - 32px);
+    gap: 11px;
+    font-size: 16px;
+    line-height: 1.2;
+  }
+
+  .brand-mark {
+    width: 34px;
+    height: 34px;
+  }
+
+  .page-content {
+    width: calc(100% - 32px);
+    min-height: calc(100vh - 66px);
+    padding-top: 32px;
+  }
+
+  .intro h1 {
+    font-size: 28px;
+  }
+
+  .appointment-card {
+    width: min(100%, 340px);
+    margin-top: 34px;
+    padding: 28px 28px 24px;
+  }
+
+  .appointment-card input,
+  .appointment-card select {
+    height: 40px;
+    font-size: 12px;
+  }
+
+  .select-wrap::after {
+    top: 14px;
+  }
+
+  .confirm-button {
+    height: 40px;
+  }
+}
+/* STEP 1: DENTAL SERVICE SELECTION */
+
+.service-card {
+  width: min(366px, 100%);
+  margin: 3px auto 0;
+  padding: 29px 28px 23px;
+}
+
+.service-card h2 {
+  margin-bottom: 22px;
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 29px;
+}
+
+.service-option {
+  min-height: 41px;
+  padding: 8px;
+  border: 1px solid #a8cdeb;
+  border-radius: 5px;
+  background: #f0f8ff;
+  color: #263568;
+  font-size: 11px;
+  font-weight: 500;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+
+.service-option:hover {
+  border-color: #315a9d;
+  background: #e0efff;
+}
+
+.service-option.selected {
+  border: 2px solid #315a9d;
+  background: #d9eaff;
+  color: #081b5c;
+  font-weight: 700;
+}
+
+.next-button {
+  display: block;
+  width: 55%;
+  height: 28px;
+  margin: 38px auto 0;
+}
+
+/* STEP 2: APPOINTMENT DETAILS */
+
+.selected-service {
+  margin: -8px 0 18px;
+  color: #52618e;
+  font-size: 11px;
+}
+
+.form-navigation {
+  display: flex;
+  gap: 10px;
+  margin-top: 19px;
+}
+
+.form-navigation .confirm-button {
+  flex: 1;
+  margin-top: 0;
+}
+
+.back-button {
+  width: 75px;
+  height: 27px;
+  border: 1px solid #a8cdeb;
+  border-radius: 4px;
+  background: #f0f8ff;
+  color: #263568;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.back-button:hover {
+  background: #e0efff;
+}
+
+@media (max-width: 640px) {
+  .service-card {
+    width: min(100%, 366px);
+    margin-top: 34px;
+    padding: 28px 22px 24px;
+  }
+
+  .service-grid {
+    gap: 16px 12px;
+  }
+
+  .service-option {
+    min-height: 45px;
+    font-size: 10px;
+  }
+
+  .next-button {
+    width: 70%;
+    height: 40px;
+    margin-top: 30px;
+  }
+
+  .form-navigation .confirm-button,
+  .back-button {
+    height: 40px;
+  }
+}
+.slip-detail {
+  font-size: 11px !important;
+  line-height: 1.4 !important;
+  letter-spacing: 0 !important;
+  margin-bottom: 5px;
+}
