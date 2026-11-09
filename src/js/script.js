@@ -7,19 +7,12 @@ const doctors = [
 
 const appointmentTimes = [
   '08:00 AM',
-  '08:30 AM',
   '09:00 AM',
-  '09:30 AM',
   '10:00 AM',
-  '10:30 AM',
   '11:00 AM',
-  '11:30 AM',
   '01:00 PM',
-  '01:30 PM',
   '02:00 PM',
-  '02:30 PM',
   '03:00 PM',
-  '03:30 PM',
   '04:00 PM',
 ];
 
@@ -135,10 +128,6 @@ function renderAppointmentStep() {
         <p class="validation-message" id="appointment-error" role="alert" hidden></p>
 
         <div class="form-navigation">
-          <button type="button" class="back-button" id="back-button">
-            BACK
-          </button>
-
           <button type="submit" class="confirm-button">
             CONFIRM
           </button>
@@ -158,10 +147,6 @@ function renderAppointmentStep() {
 
   document.querySelector('#time').addEventListener('change', event => {
     selectedTime = event.target.value;
-  });
-
-  document.querySelector('#back-button').addEventListener('click', () => {
-    renderServiceStep();
   });
 
   document.querySelector('#appointment-form').addEventListener('submit', handleSubmit);
