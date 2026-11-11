@@ -479,3 +479,6 @@ button {
   letter-spacing: 0 !important;
   margin-bottom: 5px;
 }
+.slip-box + .slip-box {
+  margin-top: 18px;
+}
