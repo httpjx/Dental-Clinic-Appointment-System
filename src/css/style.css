@@ -1,4 +1,6 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 *,
 *::before,
 *::after {
@@ -30,12 +32,12 @@ button {
   cursor: pointer;
 }
 
-#app {
+#app,
+.app-shell {
   min-height: 100vh;
 }
 
 .app-shell {
-  min-height: 100vh;
   background: #eaf3ff;
 }
 
@@ -78,7 +80,7 @@ button {
 
 .page-content {
   position: relative;
-  width: min(100% - 64px, 880px);
+  width: min(100% - 64px, 1000px);
   min-height: calc(100vh - 70px);
   margin: 0 auto;
   padding: 40px 0 72px;
@@ -101,19 +103,19 @@ button {
 }
 
 .appointment-card {
-  width: 302px;
-  margin: 3px auto 0;
-  padding: 29px 34px 23px;
+  width: min(100%, 560px);
+  margin: 32px auto 0;
+  padding: clamp(28px, 4vw, 42px);
   border: 1px solid #a8cdeb;
-  border-radius: 12px;
+  border-radius: 14px;
   background: #fff;
   box-shadow: 0 4px 10px rgba(42, 83, 140, 0.07);
 }
 
 .appointment-card h2 {
-  margin: 0 0 20px;
+  margin: 0 0 28px;
   color: #263568;
-  font-size: 15px;
+  font-size: clamp(20px, 2vw, 24px);
   font-weight: 700;
   line-height: 1.2;
 }
@@ -124,29 +126,27 @@ button {
 }
 
 .appointment-card label {
-  margin: 0 0 6px;
+  margin: 0 0 9px;
   color: #15265c;
-  font-size: 10px;
+  font-size: 15px;
   font-weight: 500;
 }
 
 .appointment-card input,
 .appointment-card select {
   width: 100%;
-  height: 29px;
+  height: 48px;
   border: 1px solid #a8cdeb;
-  border-radius: 6px;
+  border-radius: 7px;
   outline: none;
   background: #f0f8ff;
   color: #43537f;
-  font-size: 10px;
-  transition:
-    border-color 150ms ease,
-    box-shadow 150ms ease;
+  font-size: 15px;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
 }
 
 .appointment-card input {
-  margin: 0 0 19px;
+  margin: 0 0 24px;
   padding: 0 12px;
   color-scheme: light;
 }
@@ -164,27 +164,20 @@ button {
 
 .select-wrap {
   position: relative;
-  margin-bottom: 15px;
+  margin-bottom: 22px;
 }
 
 .select-wrap::after {
   content: '';
   position: absolute;
-  top: 9px;
-  right: 11px;
-  width: 7px;
-  height: 7px;
+  top: 18px;
+  right: 16px;
+  width: 9px;
+  height: 9px;
   border-right: 2px solid #7195c4;
   border-bottom: 2px solid #7195c4;
   pointer-events: none;
   transform: rotate(45deg);
-}
-
-.validation-message {
-  margin: -4px 0 10px;
-  color: #b42318;
-  font-size: 10px;
-  line-height: 1.35;
 }
 
 .confirm-button,
@@ -193,16 +186,14 @@ button {
   background: #081b5c;
   color: #fff;
   font-weight: 700;
-  transition:
-    background 150ms ease,
-    transform 100ms ease;
+  transition: background 150ms ease, transform 100ms ease;
 }
 
 .confirm-button {
   width: 100%;
-  height: 27px;
+  height: 48px;
   margin-top: 19px;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .confirm-button:hover,
@@ -220,6 +211,92 @@ button {
 .modal-close:focus-visible {
   outline: 3px solid rgba(49, 90, 157, 0.3);
   outline-offset: 2px;
+}
+
+.validation-message {
+  margin: -4px 0 10px;
+  color: #b42318;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.service-card {
+  width: min(100%, 366px);
+  margin: 3px auto 0;
+  padding: 29px 28px 23px;
+}
+
+.service-card h2 {
+  margin-bottom: 22px;
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 29px;
+}
+
+.service-option {
+  min-height: 41px;
+  padding: 8px;
+  border: 1px solid #a8cdeb;
+  border-radius: 5px;
+  background: #f0f8ff;
+  color: #263568;
+  font-size: 11px;
+  font-weight: 500;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+
+.service-option:hover {
+  border-color: #315a9d;
+  background: #e0efff;
+}
+
+.service-option.selected {
+  border: 2px solid #315a9d;
+  background: #d9eaff;
+  color: #081b5c;
+  font-weight: 700;
+}
+
+.next-button {
+  display: block;
+  width: 55%;
+  height: 28px;
+  margin: 38px auto 0;
+}
+
+.selected-service {
+  margin: -8px 0 18px;
+  color: #52618e;
+  font-size: 11px;
+}
+
+.form-navigation {
+  display: flex;
+  gap: 10px;
+  margin-top: 19px;
+}
+
+.form-navigation .confirm-button {
+  flex: 1;
+  margin-top: 0;
+}
+
+.back-button {
+  width: 75px;
+  height: 27px;
+  border: 1px solid #a8cdeb;
+  border-radius: 4px;
+  background: #f0f8ff;
+  color: #263568;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.back-button:hover {
+  background: #e0efff;
 }
 
 .modal-overlay {
@@ -291,6 +368,10 @@ button {
   box-shadow: inset 0 0 0 1px rgba(168, 205, 235, 0.35);
 }
 
+.slip-box + .slip-box {
+  margin-top: 18px;
+}
+
 .slip-box span {
   color: #344268;
   font-size: 9px;
@@ -305,6 +386,13 @@ button {
   letter-spacing: 0.01em;
 }
 
+.slip-detail {
+  margin-bottom: 5px;
+  font-size: 11px !important;
+  line-height: 1.4 !important;
+  letter-spacing: 0 !important;
+}
+
 .modal-message {
   margin: 13px auto 15px;
   color: #3e4c72;
@@ -316,6 +404,102 @@ button {
   width: 172px;
   height: 28px;
   font-size: 10px;
+}
+
+.summary-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  width: 100%;
+  margin-top: 22px;
+}
+
+.summary-actions .confirm-button {
+  flex: 1;
+  width: 50%;
+  min-width: 0;
+  height: 42px;
+  margin: 0;
+  padding: 0 5px;
+  font-size: 11px;
+}
+
+.another-appointment-button {
+  display: block;
+  width: auto;
+  height: auto;
+  margin: 12px auto 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  box-shadow: none;
+  color: #52618e;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.another-appointment-button:hover {
+  background: transparent;
+  box-shadow: none;
+  color: #315a9d;
+  text-decoration: underline;
+}
+
+.thank-you-card {
+  padding-top: 55px;
+  padding-bottom: 55px;
+  text-align: center;
+}
+
+.thank-you-card h1 {
+  margin-bottom: 15px;
+  color: #263568;
+  font-size: 32px;
+}
+
+.thank-you-card p {
+  max-width: 300px;
+  margin: 0 auto 25px;
+  color: #52618e;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+#back-cancel-button {
+  display: inline-block !important;
+  width: auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0 0 20px !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #52618e !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  text-align: left !important;
+  cursor: pointer;
+}
+
+#back-cancel-button:hover {
+  background: transparent !important;
+  color: #315a9d !important;
+  text-decoration: underline;
+  box-shadow: none !important;
+}
+
+@media (max-width: 900px) {
+  .page-content {
+    width: calc(100% - 48px);
+  }
+
+  .appointment-card {
+    width: min(100%, 520px);
+  }
 }
 
 @media (max-width: 640px) {
@@ -338,7 +522,8 @@ button {
   .page-content {
     width: calc(100% - 32px);
     min-height: calc(100vh - 66px);
-    padding-top: 32px;
+    padding-top: 28px;
+    padding-bottom: 48px;
   }
 
   .intro h1 {
@@ -346,107 +531,40 @@ button {
   }
 
   .appointment-card {
-    width: min(100%, 340px);
-    margin-top: 34px;
-    padding: 28px 28px 24px;
+    width: 100%;
+    max-width: 480px;
+    margin: 28px auto 0;
+    padding: 26px 22px;
+  }
+
+  .appointment-card h2 {
+    margin-bottom: 24px;
+    font-size: 19px;
+  }
+
+  .appointment-card label {
+    font-size: 13px;
   }
 
   .appointment-card input,
   .appointment-card select {
-    height: 40px;
-    font-size: 12px;
+    height: 44px;
+    font-size: 14px;
   }
 
   .select-wrap::after {
-    top: 14px;
+    top: 16px;
   }
 
   .confirm-button {
-    height: 40px;
+    height: 44px;
+    font-size: 13px;
   }
-}
 
-.service-card {
-  width: min(366px, 100%);
-  margin: 3px auto 0;
-  padding: 29px 28px 23px;
-}
+  .validation-message {
+    font-size: 12px;
+  }
 
-.service-card h2 {
-  margin-bottom: 22px;
-}
-
-.service-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px 29px;
-}
-
-.service-option {
-  min-height: 41px;
-  padding: 8px;
-  border: 1px solid #a8cdeb;
-  border-radius: 5px;
-  background: #f0f8ff;
-  color: #263568;
-  font-size: 11px;
-  font-weight: 500;
-  transition: background 150ms ease, border-color 150ms ease;
-}
-
-.service-option:hover {
-  border-color: #315a9d;
-  background: #e0efff;
-}
-
-.service-option.selected {
-  border: 2px solid #315a9d;
-  background: #d9eaff;
-  color: #081b5c;
-  font-weight: 700;
-}
-
-.next-button {
-  display: block;
-  width: 55%;
-  height: 28px;
-  margin: 38px auto 0;
-}
-
-
-.selected-service {
-  margin: -8px 0 18px;
-  color: #52618e;
-  font-size: 11px;
-}
-
-.form-navigation {
-  display: flex;
-  gap: 10px;
-  margin-top: 19px;
-}
-
-.form-navigation .confirm-button {
-  flex: 1;
-  margin-top: 0;
-}
-
-.back-button {
-  width: 75px;
-  height: 27px;
-  border: 1px solid #a8cdeb;
-  border-radius: 4px;
-  background: #f0f8ff;
-  color: #263568;
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.back-button:hover {
-  background: #e0efff;
-}
-
-@media (max-width: 640px) {
   .service-card {
     width: min(100%, 366px);
     margin-top: 34px;
@@ -473,12 +591,13 @@ button {
     height: 40px;
   }
 }
-.slip-detail {
-  font-size: 11px !important;
-  line-height: 1.4 !important;
-  letter-spacing: 0 !important;
-  margin-bottom: 5px;
-}
-.slip-box + .slip-box {
-  margin-top: 18px;
+
+@media (max-width: 360px) {
+  .page-content {
+    width: calc(100% - 24px);
+  }
+
+  .appointment-card {
+    padding: 22px 17px;
+  }
 }

@@ -23,6 +23,8 @@ let slipNumber = '';
 let currentStep = 1;
 
 let submissionLocked = false;
+let cancellationLocked = false;
+let currentAppointment = null;
 
 const app = document.querySelector('#app');
 
@@ -48,6 +50,42 @@ const successIcon = `
   </svg>
 `;
 
+function renderHomePage() {
+  const stepContent = document.querySelector('#step-content');
+
+  stepContent.innerHTML = `
+    <section class="intro">
+      <h1>Welcome to Our Dental Clinic</h1>
+      <p>Your smile matters to us. Book your dental appointment today.</p>
+    </section>
+
+    <section class="appointment-card home-card">
+      <h2>Dental Clinic Appointment System</h2>
+
+      <p class="selected-service">
+        Schedule your appointment with our available dentists
+        quickly and conveniently.
+      </p>
+
+      <button
+        type="button"
+        class="confirm-button"
+        id="book-appointment-button"
+      >
+        BOOK APPOINTMENT
+      </button>
+    </section>
+  `;
+
+  document
+    .querySelector('#book-appointment-button')
+    .addEventListener('click', startBooking);
+}
+
+function startBooking() {
+  renderAppointmentStep();
+}
+
 function renderHeader() {
   return `
     <header class="site-header">
@@ -59,17 +97,89 @@ function renderHeader() {
   `;
 }
 
+function renderAppointmentSummary() {
+  const stepContent = document.querySelector('#step-content');
+
+  stepContent.innerHTML = `
+    <section class="appointment-card">
+      <h2>Appointment Summary</h2>
+
+      <div class="slip-box">
+        <span>Appointment Slip Number</span>
+        <strong>${currentAppointment.slipNumber}</strong>
+      </div>
+
+      <div class="slip-box">
+        <span>Selected Dentist</span>
+        <strong class="slip-detail">${currentAppointment.dentist}</strong>
+      </div>
+
+      <div class="slip-box">
+        <span>Appointment Date</span>
+        <strong class="slip-detail">${currentAppointment.date}</strong>
+      </div>
+
+      <div class="slip-box">
+        <span>Appointment Time</span>
+        <strong class="slip-detail">${currentAppointment.time}</strong>
+      </div>
+
+      <div class="slip-box">
+        <span>Appointment Status</span>
+        <strong class="slip-detail">
+          ${currentAppointment.status}
+        </strong>
+      </div>
+
+      <p class="validation-message" id="cancel-error" role="alert" hidden></p>
+
+      <div class="summary-actions">
+        <button
+          type="button"
+          class="confirm-button"
+          id="cancel-appointment-button"
+        >
+          CANCEL APPOINTMENT
+        </button>
+
+        <button
+          type="button"
+          class="confirm-button"
+          id="finish-button"
+        >
+          FINISH
+        </button>
+      </div>
+
+      <button
+        type="button"
+        class="another-appointment-button"
+        id="book-another-button"
+      >
+        Book Another Appointment
+      </button>
+    </section>
+  `;
+
+  document
+    .querySelector('#cancel-appointment-button')
+    .addEventListener('click', renderCancellationForm);
+
+  document
+  .querySelector('#finish-button')
+  .addEventListener('click', renderThankYouPage);
+
+  document
+    .querySelector('#book-another-button')
+    .addEventListener('click', backToHome);
+}
+
 function renderApp() {
   app.innerHTML = `
     <div class="app-shell">
       ${renderHeader()}
 
       <main class="page-content">
-        <section class="intro">
-          <h1>Appointments</h1>
-          <p>Manage your clinic appointments below</p>
-        </section>
-
         <div id="step-content"></div>
       </main>
 
@@ -79,7 +189,6 @@ function renderApp() {
 
   renderAppointmentStep();
 }
-
 
 function renderAppointmentStep() {
   const stepContent = document.querySelector('#step-content');
@@ -152,7 +261,6 @@ function renderAppointmentStep() {
   document.querySelector('#appointment-form').addEventListener('submit', handleSubmit);
 }
 
-
 async function handleSubmit(event) {
   event.preventDefault();
 
@@ -195,8 +303,15 @@ async function handleSubmit(event) {
     }
 
     console.log('Supabase appointment response:', data);
-    console.log('Slip Number:', data?.slip_number);
-    console.log('Cancellation Code:', data?.cancellation_code);
+
+    currentAppointment = {
+      slipNumber: data.slip_number,
+      cancellationCode: data.cancellation_code,
+      dentist: selectedDoctor,
+      date: selectedDate,
+      time: selectedTime,
+      status: 'Booked'
+    };
 
     showConfirmation(data);
 
@@ -208,6 +323,148 @@ async function handleSubmit(event) {
 
     submissionLocked = false;
   }
+}
+
+async function handleCancelAppointment(event) {
+  event.preventDefault();
+
+  if (cancellationLocked || !currentAppointment) return;
+
+  const enteredCode = document
+    .querySelector('#cancellation-code')
+    .value.trim();
+
+  const errorMessage = document.querySelector('#cancel-error');
+
+  const cancelButton = document.querySelector(
+    '#cancellation-form button[type="submit"]'
+  );
+
+  if (!enteredCode) {
+    errorMessage.textContent = 'Please enter your cancellation code.';
+    errorMessage.hidden = false;
+    return;
+  }
+
+  cancellationLocked = true;
+  cancelButton.disabled = true;
+  cancelButton.textContent = 'CANCELLING...';
+  errorMessage.hidden = true;
+
+  console.log('Slip number being cancelled:', currentAppointment.slipNumber);
+  console.log('Entered code length:', enteredCode.length);  
+
+  try {
+    const { data, error } = await supabase.rpc(
+      'cancel_appointment',
+      {
+        p_slip_number: currentAppointment.slipNumber,
+        p_cancellation_code: enteredCode
+      }
+    );
+
+    console.log('Cancellation response:', data);
+    console.log('Cancellation error:', error);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    if (data !== true) {
+      throw new Error(
+        'Invalid cancellation code or appointment cannot be cancelled.'
+      );
+    }
+
+    currentAppointment.status = 'Cancelled';
+
+    renderCancellationThankYouPage();
+
+  } catch (error) {
+    console.error('Cancellation Error:', error);
+
+    errorMessage.textContent = error.message;
+    errorMessage.hidden = false;
+
+    cancellationLocked = false;
+    cancelButton.disabled = false;
+    cancelButton.textContent = 'CONFIRM CANCELLATION';
+  }
+}
+
+function renderCancellationForm() {
+  const stepContent = document.querySelector('#step-content');
+
+  stepContent.innerHTML = `
+    <section class="appointment-card">
+      <button
+        type="button"
+        id="back-cancel-button"
+      >
+        BACK
+      </button>
+
+      <h2>Cancel Appointment</h2>
+
+      <p class="selected-service">
+        Enter your cancellation code to proceed.
+      </p>
+
+      <form id="cancellation-form">
+        <label for="cancellation-code">Cancellation Code</label>
+
+        <input
+          id="cancellation-code"
+          type="text"
+          maxlength="10"
+          placeholder="Enter your cancellation code"
+          required
+        />
+
+        <p class="validation-message" id="cancel-error" role="alert" hidden></p>
+
+        <div class="form-navigation">
+
+          <button type="submit" class="confirm-button">
+            CONFIRM CANCELLATION
+          </button>
+        </div>
+      </form>
+    </section>
+  `;
+  document
+  .querySelector('#back-cancel-button')
+  .addEventListener('click', renderAppointmentSummary);
+
+  document
+    .querySelector('#cancellation-form')
+    .addEventListener('submit', handleCancelAppointment);
+}
+function renderCancellationThankYouPage() {
+  const stepContent = document.querySelector('#step-content');
+
+  stepContent.innerHTML = `
+    <section class="appointment-card thank-you-card">
+      <h1>THANK YOU!</h1>
+
+      <p>
+        Your appointment has been successfully cancelled.
+        We hope to see you again soon!
+      </p>
+
+      <button
+        type="button"
+        class="another-appointment-button"
+        id="back-home-button"
+      >
+        BACK TO BOOKING PAGE
+      </button>
+    </section>
+  `;
+
+  document
+    .querySelector('#back-home-button')
+    .addEventListener('click', backToHome);
 }
 
 function convertTo24Hour(time) {
@@ -223,7 +480,7 @@ function convertTo24Hour(time) {
 
 function handleEscape(event) {
   if (event.key === 'Escape') {
-    closeModal();
+    continueToSummary();
   }
 }
 
@@ -275,24 +532,48 @@ function showConfirmation(appointment) {
   document.querySelector('#ok-button').focus();
 
   document.querySelector('#ok-button').addEventListener('click', () => {
-    closeModal();
+    continueToSummary();
   });
 
   document.addEventListener('keydown', handleEscape);
 }
 
-function closeModal() {
-  document.removeEventListener('keydown', handleEscape);
+function renderThankYouPage() {
+  const stepContent = document.querySelector('#step-content');
 
+  stepContent.innerHTML = `
+    <section class="appointment-card thank-you-card">
+      <h1>THANK YOU!</h1>
+
+      <p>
+        Your appointment has been successfully completed.
+        We look forward to seeing you!
+      </p>
+
+      <button
+        type="button"
+        class="another-appointment-button"
+        id="back-home-button"
+      >
+        BACK TO BOOKING PAGE
+      </button>
+    </section>
+  `;
+
+  document
+    .querySelector('#back-home-button')
+    .addEventListener('click', backToHome);
+}
+
+function backToHome() {
   selectedDoctor = doctors[0];
   selectedDate = '';
   selectedTime = '08:00 AM';
-  slipNumber = '';
-  submissionLocked = false;
-  currentStep = 1;
 
-  const modalContainer = document.querySelector('#modal-container');
-  modalContainer.innerHTML = '';
+  currentAppointment = null;
+
+  submissionLocked = false;
+  cancellationLocked = false;
 
   renderAppointmentStep();
 }
@@ -311,5 +592,14 @@ async function testSupabaseConnection() {
 
   console.log('Supabase connected successfully!', data);
 }
+function continueToSummary() {
+  document.removeEventListener('keydown', handleEscape);
+
+  const modalContainer = document.querySelector('#modal-container');
+  modalContainer.innerHTML = '';
+
+  renderAppointmentSummary();
+}
+
 
 testSupabaseConnection();
