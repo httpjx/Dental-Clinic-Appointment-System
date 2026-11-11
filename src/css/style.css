@@ -365,7 +365,6 @@ button {
     height: 40px;
   }
 }
-/* STEP 1: DENTAL SERVICE SELECTION */
 
 .service-card {
   width: min(366px, 100%);
@@ -414,7 +413,6 @@ button {
   margin: 38px auto 0;
 }
 
-/* STEP 2: APPOINTMENT DETAILS */
 
 .selected-service {
   margin: -8px 0 18px;

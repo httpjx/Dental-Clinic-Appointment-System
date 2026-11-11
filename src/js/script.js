@@ -194,6 +194,10 @@ async function handleSubmit(event) {
       throw new Error(error.message);
     }
 
+    console.log('Supabase appointment response:', data);
+    console.log('Slip Number:', data?.slip_number);
+    console.log('Cancellation Code:', data?.cancellation_code);
+
     showConfirmation(data);
 
   } catch (error) {
@@ -223,7 +227,8 @@ function handleEscape(event) {
   }
 }
 
-function showConfirmation(slipNumber) {
+
+function showConfirmation(appointment) {
   const modalContainer = document.querySelector('#modal-container');
 
   modalContainer.innerHTML = `
@@ -241,13 +246,23 @@ function showConfirmation(slipNumber) {
 
         <div class="slip-box">
           <span>Appointment Slip Number</span>
-          <strong>${slipNumber}</strong>
+          <strong>${appointment.slip_number}</strong>
         </div>
 
-        <p id="success-message" class="modal-message">
-          Please present this slip number to the front desk upon arrival at the
-          clinic. A staff member will verify your appointment using this reference
-          number.
+        <div class="slip-box">
+          <span>Cancellation Code</span>
+          <strong>${appointment.cancellation_code}</strong>
+        </div>
+
+        <p class="modal-message" id="success-message">
+          Please present your appointment slip number to the front desk
+          upon arrival at the clinic.
+        </p>
+
+        <p class="modal-message">
+          IMPORTANT NOTICE: Keep a screenshot or save this slip.
+          Your cancellation code will only be shown once.
+          You will need it if you want to cancel your appointment.
         </p>
 
         <button class="ok-button" id="ok-button" type="button">
@@ -260,7 +275,7 @@ function showConfirmation(slipNumber) {
   document.querySelector('#ok-button').focus();
 
   document.querySelector('#ok-button').addEventListener('click', () => {
-  closeModal();
+    closeModal();
   });
 
   document.addEventListener('keydown', handleEscape);
