@@ -41,6 +41,12 @@ button {
   background: #eaf3ff;
 }
 
+#step-content {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .site-header {
   height: 70px;
   background: #315a9d;
@@ -48,7 +54,7 @@ button {
 }
 
 .header-content {
-  width: min(100% - 64px, 980px);
+  width: calc(100% - 100px);
   height: 100%;
   margin: 0 auto;
   display: flex;
@@ -78,38 +84,23 @@ button {
   filter: drop-shadow(0 1px 1px rgba(8, 27, 92, 0.25));
 }
 
-.page-content {
-  position: relative;
-  width: min(100% - 64px, 1000px);
-  min-height: calc(100vh - 70px);
-  margin: 0 auto;
-  padding: 40px 0 72px;
-}
-
-.intro h1 {
-  margin: 0;
-  color: #263568;
-  font-size: 30px;
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.035em;
-}
-
-.intro p {
-  margin: 8px 0 0;
-  color: #52618e;
-  font-size: 10px;
-  line-height: 1.4;
-}
+/* appointment and summary */
 
 .appointment-card {
   width: min(100%, 560px);
-  margin: 32px auto 0;
+  margin: auto;
   padding: clamp(28px, 4vw, 42px);
   border: 1px solid #a8cdeb;
   border-radius: 14px;
   background: #fff;
   box-shadow: 0 4px 10px rgba(42, 83, 140, 0.07);
+}
+
+.summary-card {
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .appointment-card h2 {
@@ -146,7 +137,7 @@ button {
 }
 
 .appointment-card input {
-  margin: 0 0 24px;
+  margin-bottom: 24px;
   padding: 0 12px;
   color-scheme: light;
 }
@@ -161,6 +152,8 @@ button {
   border-color: #315a9d;
   box-shadow: 0 0 0 3px rgba(49, 90, 157, 0.12);
 }
+
+/* dropdown */
 
 .select-wrap {
   position: relative;
@@ -180,37 +173,68 @@ button {
   transform: rotate(45deg);
 }
 
-.confirm-button,
-.ok-button {
-  border: 0;
-  background: #081b5c;
-  color: #fff;
-  font-weight: 700;
-  transition: background 150ms ease, transform 100ms ease;
-}
-
 .confirm-button {
   width: 100%;
   height: 48px;
   margin-top: 19px;
+  border: 0;
+  background: #081b5c;
+  color: #fff;
   font-size: 14px;
+  font-weight: 700;
+  transition: background 150ms ease, transform 100ms ease;
 }
 
-.confirm-button:hover,
-.ok-button:hover {
+.confirm-button:hover {
   background: #142d78;
 }
 
-.confirm-button:active,
-.ok-button:active {
+.confirm-button:active {
   transform: translateY(1px);
 }
 
-.confirm-button:focus-visible,
-.ok-button:focus-visible,
-.modal-close:focus-visible {
+.confirm-button:focus-visible {
   outline: 3px solid rgba(49, 90, 157, 0.3);
   outline-offset: 2px;
+}
+
+.summary-actions {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  margin-top: 22px;
+}
+
+.summary-actions .confirm-button {
+  flex: 1;
+  min-width: 0;
+  height: 42px;
+  margin: 0;
+  padding: 0 5px;
+  font-size: 11px;
+}
+
+/* book another appointment */
+.another-appointment-button {
+  display: block;
+  width: auto;
+  height: auto;
+  margin: 12px auto 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  box-shadow: none;
+  color: #52618e;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.another-appointment-button:hover {
+  background: transparent;
+  box-shadow: none;
+  color: #315a9d;
+  text-decoration: underline;
 }
 
 .validation-message {
@@ -220,144 +244,7 @@ button {
   line-height: 1.35;
 }
 
-.service-card {
-  width: min(100%, 366px);
-  margin: 3px auto 0;
-  padding: 29px 28px 23px;
-}
-
-.service-card h2 {
-  margin-bottom: 22px;
-}
-
-.service-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px 29px;
-}
-
-.service-option {
-  min-height: 41px;
-  padding: 8px;
-  border: 1px solid #a8cdeb;
-  border-radius: 5px;
-  background: #f0f8ff;
-  color: #263568;
-  font-size: 11px;
-  font-weight: 500;
-  transition: background 150ms ease, border-color 150ms ease;
-}
-
-.service-option:hover {
-  border-color: #315a9d;
-  background: #e0efff;
-}
-
-.service-option.selected {
-  border: 2px solid #315a9d;
-  background: #d9eaff;
-  color: #081b5c;
-  font-weight: 700;
-}
-
-.next-button {
-  display: block;
-  width: 55%;
-  height: 28px;
-  margin: 38px auto 0;
-}
-
-.selected-service {
-  margin: -8px 0 18px;
-  color: #52618e;
-  font-size: 11px;
-}
-
-.form-navigation {
-  display: flex;
-  gap: 10px;
-  margin-top: 19px;
-}
-
-.form-navigation .confirm-button {
-  flex: 1;
-  margin-top: 0;
-}
-
-.back-button {
-  width: 75px;
-  height: 27px;
-  border: 1px solid #a8cdeb;
-  border-radius: 4px;
-  background: #f0f8ff;
-  color: #263568;
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.back-button:hover {
-  background: #e0efff;
-}
-
-.modal-overlay {
-  position: fixed;
-  z-index: 10;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  padding: 20px;
-  background: rgba(56, 75, 103, 0.22);
-}
-
-.confirmation-modal {
-  position: relative;
-  width: min(320px, 100%);
-  min-height: 300px;
-  padding: 23px 25px 18px;
-  border: 1px solid #59616b;
-  border-radius: 3px;
-  background: #fff;
-  box-shadow: 0 4px 16px rgba(12, 31, 72, 0.2);
-  text-align: center;
-}
-
-.modal-close {
-  position: absolute;
-  top: 10px;
-  right: 9px;
-  width: 21px;
-  height: 21px;
-  display: grid;
-  place-items: center;
-  border: 0;
-  border-radius: 50%;
-  background: #edf3fa;
-  color: #6980a1;
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 1;
-}
-
-.modal-close span {
-  transform: translateY(-1px);
-}
-
-.success-icon {
-  width: 59px;
-  height: 59px;
-  margin: 0 auto 12px;
-  color: #081b5c;
-}
-
-.confirmation-modal h2 {
-  margin: 0 0 14px;
-  color: #081b5c;
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1.25;
-  letter-spacing: -0.02em;
-}
-
+/* appointment slip */
 .slip-box {
   display: flex;
   flex-direction: column;
@@ -400,56 +287,9 @@ button {
   line-height: 1.45;
 }
 
-.ok-button {
-  width: 172px;
-  height: 28px;
-  font-size: 10px;
-}
-
-.summary-actions {
-  display: flex;
-  flex-direction: row;
-  gap: 12px;
-  width: 100%;
-  margin-top: 22px;
-}
-
-.summary-actions .confirm-button {
-  flex: 1;
-  width: 50%;
-  min-width: 0;
-  height: 42px;
-  margin: 0;
-  padding: 0 5px;
-  font-size: 11px;
-}
-
-.another-appointment-button {
-  display: block;
-  width: auto;
-  height: auto;
-  margin: 12px auto 0;
-  padding: 0;
-  border: none;
-  outline: none;
-  background: transparent;
-  box-shadow: none;
-  color: #52618e;
-  font-size: 11px;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.another-appointment-button:hover {
-  background: transparent;
-  box-shadow: none;
-  color: #315a9d;
-  text-decoration: underline;
-}
-
+/* thank you page */
 .thank-you-card {
-  padding-top: 55px;
-  padding-bottom: 55px;
+  padding: 55px 0;
   text-align: center;
 }
 
@@ -467,48 +307,118 @@ button {
   line-height: 1.7;
 }
 
-#back-cancel-button {
-  display: inline-block !important;
-  width: auto !important;
-  height: auto !important;
-  min-height: 0 !important;
-  margin: 0 0 20px !important;
-  padding: 0 !important;
-  border: none !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  color: #52618e !important;
-  font-size: 13px !important;
-  font-weight: 500 !important;
-  text-align: left !important;
-  cursor: pointer;
+/* welcome page */
+.welcome-page {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: 30px 20px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(8, 27, 92, 0.88),
+      rgba(30, 58, 138, 0.78),
+      rgba(37, 99, 235, 0.65)
+    ),
+    url('https://www.the-smile-bar.com/wp-content/uploads/2024/02/dental-health-care-1-scaled.jpg')
+    center / cover no-repeat;
 }
 
-#back-cancel-button:hover {
-  background: transparent !important;
-  color: #315a9d !important;
-  text-decoration: underline;
-  box-shadow: none !important;
+.welcome-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(100%, 1100px);
+  color: #fff;
+  text-align: center;
 }
 
+.welcome-logo {
+  width: 100px;
+  height: 100px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.welcome-logo .tooth-icon {
+  width: 58px;
+  height: 58px;
+}
+
+.welcome-content h1 {
+  width: 100%;
+  margin: 0 0 35px;
+  color: #fff;
+  font-size: clamp(22px, 3.5vw, 46px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+}
+
+.welcome-content p {
+  max-width: 620px;
+  margin: 30px 0 32px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.welcome-button {
+  min-height: 56px;
+  padding: 0 34px;
+  border: 0;
+  border-radius: 12px;
+  background: #fff;
+  color: #1e40af;
+  font-size: 15px;
+  font-weight: 700;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.welcome-button:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.welcome-button:active {
+  transform: scale(0.98);
+}
+
+.welcome-button:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 4px;
+}
+
+/*tablet responsiveness*/
 @media (max-width: 900px) {
-  .page-content {
-    width: calc(100% - 48px);
-  }
-
   .appointment-card {
     width: min(100%, 520px);
   }
 }
 
+/*mobile responsiveness*/
 @media (max-width: 640px) {
   .site-header {
     height: 66px;
   }
 
   .header-content {
-    width: calc(100% - 32px);
+    width: calc(100% - 40px);
     gap: 11px;
     font-size: 16px;
     line-height: 1.2;
@@ -519,21 +429,9 @@ button {
     height: 34px;
   }
 
-  .page-content {
-    width: calc(100% - 32px);
-    min-height: calc(100vh - 66px);
-    padding-top: 28px;
-    padding-bottom: 48px;
-  }
-
-  .intro h1 {
-    font-size: 28px;
-  }
-
   .appointment-card {
     width: 100%;
     max-width: 480px;
-    margin: 28px auto 0;
     padding: 26px 22px;
   }
 
@@ -565,38 +463,41 @@ button {
     font-size: 12px;
   }
 
-  .service-card {
-    width: min(100%, 366px);
-    margin-top: 34px;
-    padding: 28px 22px 24px;
+  .welcome-page {
+    min-height: 100svh;
+    padding: 24px;
   }
 
-  .service-grid {
-    gap: 16px 12px;
+  .welcome-logo {
+    width: 82px;
+    height: 82px;
+    margin-bottom: 25px;
   }
 
-  .service-option {
-    min-height: 45px;
-    font-size: 10px;
+  .welcome-logo .tooth-icon {
+    width: 48px;
+    height: 48px;
   }
 
-  .next-button {
-    width: 70%;
-    height: 40px;
-    margin-top: 30px;
+  .welcome-content h1 {
+    font-size: 28px;
+    white-space: normal;
   }
 
-  .form-navigation .confirm-button,
-  .back-button {
-    height: 40px;
+  .welcome-content p {
+    margin: 22px 0 28px;
+    font-size: 14px;
+  }
+
+  .welcome-button {
+    width: 100%;
+    max-width: 320px;
+    padding: 0 18px;
+    font-size: 13px;
   }
 }
 
 @media (max-width: 360px) {
-  .page-content {
-    width: calc(100% - 24px);
-  }
-
   .appointment-card {
     padding: 22px 17px;
   }

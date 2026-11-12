@@ -19,61 +19,49 @@ const appointmentTimes = [
 let selectedDoctor = doctors[0];
 let selectedDate = '';
 let selectedTime = '08:00 AM';
-let slipNumber = '';
-let currentStep = 1;
-
 let submissionLocked = false;
-let cancellationLocked = false;
-let currentAppointment = null;
 
 const app = document.querySelector('#app');
 
-const toothIcon = `
-  <svg aria-hidden="true" class="tooth-icon" viewBox="0 0 32 32" fill="none">
-    <path
-      d="M8.2 5.9c2.2-1.3 4.3-.2 5.4.3.9.4 1.7.4 2.5 0 1.1-.5 3.2-1.6 5.5-.3 2.9 1.7 3 5.5 2.1 8.3-.7 2.2-2.1 3.8-2.7 6-.8 2.8-.7 6-2.8 6.2-2.6.3-2-6.7-4.3-6.7s-1.7 7-4.3 6.7c-2.1-.2-2-3.4-2.8-6.2-.6-2.2-2-3.8-2.7-6-.9-2.8-.8-6.6 2.1-8.3Z"
-      fill="currentColor"
-    />
-  </svg>
-`;
-
-const successIcon = `
-  <svg aria-hidden="true" class="success-icon" viewBox="0 0 64 64" fill="none">
-    <circle cx="32" cy="32" r="24" stroke="currentColor" stroke-width="4"/>
-    <path
-      d="m20 32 8 8 18-20"
-      stroke="currentColor"
-      stroke-width="4"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-  </svg>
-`;
 
 function renderHomePage() {
   const stepContent = document.querySelector('#step-content');
 
   stepContent.innerHTML = `
-    <section class="intro">
-      <h1>Welcome to Our Dental Clinic</h1>
-      <p>Your smile matters to us. Book your dental appointment today.</p>
-    </section>
+    <section class="welcome-page">
+      <div class="welcome-content">
 
-    <section class="appointment-card home-card">
-      <h2>Dental Clinic Appointment System</h2>
+        <div class="welcome-logo">
+          <svg
+            class="tooth-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M12 3.5c-2.2-1.5-5.5-1.2-7.1.8-1.5 1.9-.8 5.2.1 7.6.8 2.2 1.7 7.2 3.6 7.2 1.5 0 1.3-5.1 3.4-5.1s1.9 5.1 3.4 5.1c1.9 0 2.8-5 3.6-7.2.9-2.4 1.6-5.7.1-7.6-1.6-2-4.9-2.3-7.1-.8z"/>
+          </svg>
+        </div>
 
-      <p class="selected-service">
-        Schedule your appointment with our available dentists
-        quickly and conveniently.
-      </p>
+        <h1>Dental Clinic Appointment System</h1>
 
-      <button
-        type="button"
-        class="confirm-button"
-        id="book-appointment-button"
-      >
-        BOOK APPOINTMENT
-      </button>
+        <button
+          type="button"
+          class="welcome-button"
+          id="book-appointment-button"
+        >
+          Book Your Appointment Now
+        </button>
+
+        <p>
+          Use your smile to change the world,
+          don't let the world change your smile.
+        </p>
+
+      </div>
     </section>
   `;
 
@@ -86,52 +74,31 @@ function startBooking() {
   renderAppointmentStep();
 }
 
-function renderHeader() {
-  return `
-    <header class="site-header">
-      <div class="header-content">
-        <div class="brand-mark">${toothIcon}</div>
-        <span>Dental Clinic Appointment System</span>
-      </div>
-    </header>
-  `;
-}
-
 function renderAppointmentSummary() {
   const stepContent = document.querySelector('#step-content');
 
   stepContent.innerHTML = `
-    <section class="appointment-card">
+    ${renderHeader()}
+
+    <section class="appointment-card summary-card">
       <h2>Appointment Summary</h2>
 
       <div class="slip-box">
-        <span>Appointment Slip Number</span>
-        <strong>${currentAppointment.slipNumber}</strong>
-      </div>
-
-      <div class="slip-box">
         <span>Selected Dentist</span>
-        <strong class="slip-detail">${currentAppointment.dentist}</strong>
+        <strong class="slip-detail">${selectedDoctor}</strong>
       </div>
 
       <div class="slip-box">
         <span>Appointment Date</span>
-        <strong class="slip-detail">${currentAppointment.date}</strong>
+        <strong class="slip-detail">${selectedDate}</strong>
       </div>
 
       <div class="slip-box">
         <span>Appointment Time</span>
-        <strong class="slip-detail">${currentAppointment.time}</strong>
+        <strong class="slip-detail">${selectedTime}</strong>
       </div>
 
-      <div class="slip-box">
-        <span>Appointment Status</span>
-        <strong class="slip-detail">
-          ${currentAppointment.status}
-        </strong>
-      </div>
-
-      <p class="validation-message" id="cancel-error" role="alert" hidden></p>
+      <p class="validation-message" id="summary-error" role="alert" hidden></p>
 
       <div class="summary-actions">
         <button
@@ -139,61 +106,70 @@ function renderAppointmentSummary() {
           class="confirm-button"
           id="cancel-appointment-button"
         >
-          CANCEL APPOINTMENT
+          CANCEL
         </button>
 
         <button
           type="button"
           class="confirm-button"
-          id="finish-button"
+          id="confirm-appointment-button"
         >
-          FINISH
+          CONFIRM
         </button>
       </div>
-
-      <button
-        type="button"
-        class="another-appointment-button"
-        id="book-another-button"
-      >
-        Book Another Appointment
-      </button>
     </section>
   `;
 
   document
     .querySelector('#cancel-appointment-button')
-    .addEventListener('click', renderCancellationForm);
+    .addEventListener('click', renderAppointmentStep);
 
   document
-  .querySelector('#finish-button')
-  .addEventListener('click', renderThankYouPage);
-
-  document
-    .querySelector('#book-another-button')
-    .addEventListener('click', backToHome);
+    .querySelector('#confirm-appointment-button')
+    .addEventListener('click', confirmAppointment);
 }
 
 function renderApp() {
   app.innerHTML = `
     <div class="app-shell">
-      ${renderHeader()}
-
-      <main class="page-content">
-        <div id="step-content"></div>
-      </main>
-
-      <div id="modal-container"></div>
+      <main id="step-content"></main>
     </div>
   `;
 
-  renderAppointmentStep();
+  renderHomePage();
+}
+
+function renderHeader() {
+  return `
+    <header class="site-header">
+      <div class="header-content">
+        <div class="brand-mark">
+          <svg
+            class="tooth-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M12 3.5c-2.2-1.5-5.5-1.2-7.1.8-1.5 1.9-.8 5.2.1 7.6.8 2.2 1.7 7.2 3.6 7.2 1.5 0 1.3-5.1 3.4-5.1s1.9 5.1 3.4 5.1c1.9 0 2.8-5 3.6-7.2.9-2.4 1.6-5.7.1-7.6-1.6-2-4.9-2.3-7.1-.8z"/>
+          </svg>
+        </div>
+
+        <span>Dental Clinic Appointment System</span>
+      </div>
+    </header>
+  `;
 }
 
 function renderAppointmentStep() {
   const stepContent = document.querySelector('#step-content');
 
   stepContent.innerHTML = `
+    ${renderHeader()}
+
     <section class="appointment-card">
       <h2>Appointment Details</h2>
 
@@ -217,6 +193,8 @@ function renderAppointmentStep() {
           id="date"
           type="date"
           lang="en-GB"
+          min="${getManilaDateTime().date}"
+          max="${getMaximumBookingDate()}"
           value="${selectedDate}"
           required
         />
@@ -236,11 +214,9 @@ function renderAppointmentStep() {
 
         <p class="validation-message" id="appointment-error" role="alert" hidden></p>
 
-        <div class="form-navigation">
           <button type="submit" class="confirm-button">
-            CONFIRM
+            CONTINUE
           </button>
-        </div>
 
       </form>
     </section>
@@ -261,7 +237,7 @@ function renderAppointmentStep() {
   document.querySelector('#appointment-form').addEventListener('submit', handleSubmit);
 }
 
-async function handleSubmit(event) {
+function handleSubmit(event) {
   event.preventDefault();
 
   if (submissionLocked) return;
@@ -279,16 +255,67 @@ async function handleSubmit(event) {
     return;
   }
 
-  submissionLocked = true;
+  const { date: today, time: currentTime } = getManilaDateTime();
+  const maximumDate = getMaximumBookingDate();
+  const appointmentTime24 = convertTo24Hour(selectedTime);
+
+  if (selectedDate < today || selectedDate > maximumDate) {
+    errorMessage.textContent =
+      'Appointments can only be booked within the next 12 months.';
+    errorMessage.hidden = false;
+    return;
+  }
+
+  if (
+    selectedDate === today &&
+    appointmentTime24.slice(0, 5) <= currentTime
+  ) {
+    errorMessage.textContent =
+      'Please select a valid appointment time.';
+    errorMessage.hidden = false;
+    return;
+  }
+
   errorMessage.hidden = true;
 
+  renderAppointmentSummary();
+}
+
+async function confirmAppointment() {
+  if (submissionLocked) return;
+
+  submissionLocked = true;
+
+  const errorMessage = document.querySelector('#summary-error');
+  const confirmButton = document.querySelector('#confirm-appointment-button');
+
+  confirmButton.disabled = true;
+  confirmButton.textContent = 'CONFIRMING...';
+
   try {
+    const { date: today, time: currentTime } = getManilaDateTime();
+    const maximumDate = getMaximumBookingDate();
+    const appointmentTime24 = convertTo24Hour(selectedTime);
+
+    if (selectedDate < today || selectedDate > maximumDate) {
+      throw new Error(
+        'Appointments can only be booked within the next 12 months.'
+      );
+    }
+
+    if (
+      selectedDate === today &&
+      appointmentTime24.slice(0, 5) <= currentTime
+    ) {
+      throw new Error('Please select a future appointment time.');
+    }
+
     const { data, error } = await supabase.rpc(
       'create_appointment',
       {
         p_dentist_name: selectedDoctor,
         p_appointment_date: selectedDate,
-        p_appointment_time: convertTo24Hour(selectedTime)
+        p_appointment_time: appointmentTime24
       }
     );
 
@@ -304,16 +331,7 @@ async function handleSubmit(event) {
 
     console.log('Supabase appointment response:', data);
 
-    currentAppointment = {
-      slipNumber: data.slip_number,
-      cancellationCode: data.cancellation_code,
-      dentist: selectedDoctor,
-      date: selectedDate,
-      time: selectedTime,
-      status: 'Booked'
-    };
-
-    showConfirmation(data);
+    renderAppointmentSlip(data);
 
   } catch (error) {
     console.error('Appointment Error:', error);
@@ -322,149 +340,46 @@ async function handleSubmit(event) {
     errorMessage.hidden = false;
 
     submissionLocked = false;
+    confirmButton.disabled = false;
+    confirmButton.textContent = 'CONFIRM';
   }
 }
 
-async function handleCancelAppointment(event) {
-  event.preventDefault();
+function getManilaDateTime() {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Manila',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23'
+  }).formatToParts(new Date());
 
-  if (cancellationLocked || !currentAppointment) return;
+  const values = {};
 
-  const enteredCode = document
-    .querySelector('#cancellation-code')
-    .value.trim();
+  parts.forEach(part => {
+    values[part.type] = part.value;
+  });
 
-  const errorMessage = document.querySelector('#cancel-error');
-
-  const cancelButton = document.querySelector(
-    '#cancellation-form button[type="submit"]'
-  );
-
-  if (!enteredCode) {
-    errorMessage.textContent = 'Please enter your cancellation code.';
-    errorMessage.hidden = false;
-    return;
-  }
-
-  cancellationLocked = true;
-  cancelButton.disabled = true;
-  cancelButton.textContent = 'CANCELLING...';
-  errorMessage.hidden = true;
-
-  console.log('Slip number being cancelled:', currentAppointment.slipNumber);
-  console.log('Entered code length:', enteredCode.length);  
-
-  try {
-    const { data, error } = await supabase.rpc(
-      'cancel_appointment',
-      {
-        p_slip_number: currentAppointment.slipNumber,
-        p_cancellation_code: enteredCode
-      }
-    );
-
-    console.log('Cancellation response:', data);
-    console.log('Cancellation error:', error);
-
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    if (data !== true) {
-      throw new Error(
-        'Invalid cancellation code or appointment cannot be cancelled.'
-      );
-    }
-
-    currentAppointment.status = 'Cancelled';
-
-    renderCancellationThankYouPage();
-
-  } catch (error) {
-    console.error('Cancellation Error:', error);
-
-    errorMessage.textContent = error.message;
-    errorMessage.hidden = false;
-
-    cancellationLocked = false;
-    cancelButton.disabled = false;
-    cancelButton.textContent = 'CONFIRM CANCELLATION';
-  }
+  return {
+    date: `${values.year}-${values.month}-${values.day}`,
+    time: `${values.hour}:${values.minute}`
+  };
 }
 
-function renderCancellationForm() {
-  const stepContent = document.querySelector('#step-content');
+function getMaximumBookingDate() {
+  const { date } = getManilaDateTime();
+  const [year, month, day] = date.split('-').map(Number);
 
-  stepContent.innerHTML = `
-    <section class="appointment-card">
-      <button
-        type="button"
-        id="back-cancel-button"
-      >
-        BACK
-      </button>
+  const maximumDate = new Date(Date.UTC(year, month - 1, day));
+  maximumDate.setUTCFullYear(maximumDate.getUTCFullYear() + 1);
 
-      <h2>Cancel Appointment</h2>
-
-      <p class="selected-service">
-        Enter your cancellation code to proceed.
-      </p>
-
-      <form id="cancellation-form">
-        <label for="cancellation-code">Cancellation Code</label>
-
-        <input
-          id="cancellation-code"
-          type="text"
-          maxlength="10"
-          placeholder="Enter your cancellation code"
-          required
-        />
-
-        <p class="validation-message" id="cancel-error" role="alert" hidden></p>
-
-        <div class="form-navigation">
-
-          <button type="submit" class="confirm-button">
-            CONFIRM CANCELLATION
-          </button>
-        </div>
-      </form>
-    </section>
-  `;
-  document
-  .querySelector('#back-cancel-button')
-  .addEventListener('click', renderAppointmentSummary);
-
-  document
-    .querySelector('#cancellation-form')
-    .addEventListener('submit', handleCancelAppointment);
-}
-function renderCancellationThankYouPage() {
-  const stepContent = document.querySelector('#step-content');
-
-  stepContent.innerHTML = `
-    <section class="appointment-card thank-you-card">
-      <h1>THANK YOU!</h1>
-
-      <p>
-        Your appointment has been successfully cancelled.
-        We hope to see you again soon!
-      </p>
-
-      <button
-        type="button"
-        class="another-appointment-button"
-        id="back-home-button"
-      >
-        BACK TO BOOKING PAGE
-      </button>
-    </section>
-  `;
-
-  document
-    .querySelector('#back-home-button')
-    .addEventListener('click', backToHome);
+  return [
+    maximumDate.getUTCFullYear(),
+    String(maximumDate.getUTCMonth() + 1).padStart(2, '0'),
+    String(maximumDate.getUTCDate()).padStart(2, '0')
+  ].join('-');
 }
 
 function convertTo24Hour(time) {
@@ -477,71 +392,60 @@ function convertTo24Hour(time) {
   return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`;
 }
 
+function renderAppointmentSlip(appointment) {
+  const stepContent = document.querySelector('#step-content');
 
-function handleEscape(event) {
-  if (event.key === 'Escape') {
-    continueToSummary();
-  }
-}
+  stepContent.innerHTML = `
+    ${renderHeader()}
 
+    <section class="appointment-card">
+      <h2>Appointment Successfully Created!</h2>
 
-function showConfirmation(appointment) {
-  const modalContainer = document.querySelector('#modal-container');
+      <div class="slip-box">
+        <span>Appointment Slip Number</span>
+        <strong>${appointment.slip_number}</strong>
+      </div>
 
-  modalContainer.innerHTML = `
-    <div class="modal-overlay" role="presentation">
-      <section
-        aria-labelledby="success-title"
-        aria-describedby="success-message"
-        aria-modal="true"
-        class="confirmation-modal"
-        role="dialog"
-      >
-        ${successIcon}
+      <p class="modal-message">
+        Please take a screenshot of this appointment slip
+        and present it at the front desk upon arrival.
+      </p>
 
-        <h2 id="success-title">Appointment Successfully Created!</h2>
-
-        <div class="slip-box">
-          <span>Appointment Slip Number</span>
-          <strong>${appointment.slip_number}</strong>
-        </div>
-
-        <div class="slip-box">
-          <span>Cancellation Code</span>
-          <strong>${appointment.cancellation_code}</strong>
-        </div>
-
-        <p class="modal-message" id="success-message">
-          Please present your appointment slip number to the front desk
-          upon arrival at the clinic.
-        </p>
-
-        <p class="modal-message">
-          IMPORTANT NOTICE: Keep a screenshot or save this slip.
-          Your cancellation code will only be shown once.
-          You will need it if you want to cancel your appointment.
-        </p>
-
-        <button class="ok-button" id="ok-button" type="button">
-          OK
+      <div class="summary-actions">
+        <button
+          type="button"
+          class="confirm-button"
+          id="book-another-button"
+        >
+          BOOK ANOTHER APPOINTMENT
         </button>
-      </section>
-    </div>
+
+        <button
+          type="button"
+          class="confirm-button"
+          id="finish-button"
+        >
+          FINISH
+        </button>
+      </div>
+    </section>
   `;
 
-  document.querySelector('#ok-button').focus();
+  document
+    .querySelector('#book-another-button')
+    .addEventListener('click', backToHome);
 
-  document.querySelector('#ok-button').addEventListener('click', () => {
-    continueToSummary();
-  });
-
-  document.addEventListener('keydown', handleEscape);
+  document
+    .querySelector('#finish-button')
+    .addEventListener('click', renderThankYouPage);
 }
 
 function renderThankYouPage() {
   const stepContent = document.querySelector('#step-content');
 
   stepContent.innerHTML = `
+    ${renderHeader()}
+
     <section class="appointment-card thank-you-card">
       <h1>THANK YOU!</h1>
 
@@ -555,14 +459,21 @@ function renderThankYouPage() {
         class="another-appointment-button"
         id="back-home-button"
       >
-        BACK TO BOOKING PAGE
+        BACK TO HOME PAGE
       </button>
     </section>
   `;
 
   document
     .querySelector('#back-home-button')
-    .addEventListener('click', backToHome);
+    .addEventListener('click', () => {
+      selectedDoctor = doctors[0];
+      selectedDate = '';
+      selectedTime = '08:00 AM';
+      submissionLocked = false;
+
+      renderHomePage();
+  });
 }
 
 function backToHome() {
@@ -570,36 +481,9 @@ function backToHome() {
   selectedDate = '';
   selectedTime = '08:00 AM';
 
-  currentAppointment = null;
-
   submissionLocked = false;
-  cancellationLocked = false;
 
   renderAppointmentStep();
 }
 
 renderApp();
-async function testSupabaseConnection() {
-  const { data, error } = await supabase
-    .from('Appointments')
-    .select('appointment_id')
-    .limit(1);
-
-  if (error) {
-    console.error('Supabase connection error:', error.message);
-    return;
-  }
-
-  console.log('Supabase connected successfully!', data);
-}
-function continueToSummary() {
-  document.removeEventListener('keydown', handleEscape);
-
-  const modalContainer = document.querySelector('#modal-container');
-  modalContainer.innerHTML = '';
-
-  renderAppointmentSummary();
-}
-
-
-testSupabaseConnection();
