@@ -430,8 +430,9 @@ button {
   }
 
   .appointment-card {
-    width: 100%;
+    width: calc(100% - 32px);
     max-width: 480px;
+    margin: 24px auto;
     padding: 26px 22px;
   }
 
